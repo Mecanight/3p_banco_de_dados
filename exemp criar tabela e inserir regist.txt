@@ -1,0 +1,408 @@
+criar server
+pesquisar IP com comando ifconfig
+nome e senha postgres
+criar database
+
+
+criar tabela
+create table cidade (
+	codigo_cidade numeric (3,0), 
+	nome_cidade varchar (60) not null,
+	sigla_uf char(2),
+	constraint pk_cidade primary key (codigo_cidade) /*colocar comentario*/
+)
+
+
+create table pessoa(
+	codigo_pessoa numeric(5,0) primary key,
+	nome_pessoa varchar (80) not null,
+	codigo_cidade numeric (3,0),
+	constraint fk_cidade_pessoa foreign key (codigo_cidade) references cidade
+)
+
+constraint - adiciona uma restrição
+deletar uma tabela (deveria pedir o cpf da pessoa, kkk, pra colocar no serasa)
+drop table pessoa
+
+
+
+AULA 23032022
+
+create table cidade(
+	cd_cidade numeric(6,0),
+	nm_cidade varchar(80) not null,
+	uf char(2) not null,
+	constraint cidade_pk primary key (cd_cidade)
+)
+create table pessoa(
+	cd_pessoa numeric(6),
+	tp_pessoa char(1),
+	nm_pessoa varchar(80) not null,
+	ds_endereco varchar(200),
+	cd_cidade numeric(6),
+	constraint pessoa_pk primary key(cd_pessoa),
+	constraint ver_tp_pessoa check (tp_pessoa in ('F', 'J')),
+	constraint fk_cidade_pessoa foreign key (cd_cidade) references cidade
+)
+
+create table duplicata(
+	nr_duplicata numeric(10),
+	dt_emissao date not null,
+	dt_vencimento date not null,
+	vl_duplicata numeric(8,3) not null,
+	tp_duplicata char(1) not null,
+	cd_pessoa numeric (6)
+)
+
+alter table duplicata add constraint duplicata_pk primary key(nr_duplicata)
+
+alter table duplicata add constraint ver_vl_duplicata check (vl_duplicata > 0)
+
+alter table duplicata add constraint ver_tp_duplicata check (tp_duplicata in ('P', 'R'))
+
+alter table duplicata add constraint fk_pessoa_duplicata foreign key (cd_pessoa) references pessoa
+
+
+create table pagamento(
+	nr_duplicata numeric(10),
+	nr_pagamento numeric(2),
+	dt_pagamento date not null,
+	vl_pagamento numeric(8,2) not null
+)
+
+alter table pagamento add constraint pagamento_pk primary key (nr_duplicata, nr_pagamento)
+
+alter table pagamento add constraint fk_duplicata foreign key (nr_duplicata) references duplicata
+
+CODIGOS DO EXERCICIO
+
+create table veiculo(
+	nr_placa char(7) not null primary key,
+	nr_renavan integer not null unique,
+	cd_modelo integer not null,
+	nr_ano smallint,
+	nr_modelo smallint,
+	cd_cor integer not null,
+	st_combustivel char(1) not null,
+	vl_fipe float not null
+);
+
+create table cor(
+	cd_cor integer not null primary key,
+	ds_cor varchar(40) not null
+);
+
+create table modelo(
+	cd_modelo integer not null primary key,
+	cd_marca integer not null,
+	ds_modelo char(18)
+);
+
+create table marca(
+	cd_marca integer not null primary key,
+	ds_marca varchar(60) not null
+);
+
+alter table veiculo add constraint fk_cor_veiculo foreign key (cd_cor) references cor;
+
+alter table veiculo add constraint fk_modelo_veiculo foreign key (cd_modelo) references modelo;
+
+alter table modelo add constraint fk_marca_modelo foreign key (cd_marca) references marca
+
+
+04042022
+
+Inserindo registros
+
+insert into cidade (cd_cidade, nm_cidade, sg_uf)
+values(1,'Pato Branco','PR')
+
+apresentar registros
+
+select * from cidade
+
+insert into cidade (cd_cidade, nm_cidade, sg_uf)
+values(2,'Vitorino','PR'),(3,'Chapecó','PR'),(4, 'Clevelândia', 'PR')
+
+update cidade set sg_uf = 'SC' where (cd_cidade = 3)
+
+update cidade set sg_uf = 'PR' where (cd_cidade = 1) or (cd_cidade = 2) or (cd_cidade = 4)
+
+update cidade set sg_uf = 'PR' where (cd_cidade <> 3)
+
+update cidade set sg_uf = 'PR' where (cd_cidade in (1,2,4))
+
+update cidade set sg_uf = 'PR' where (cd_cidade not in (1,2,4))
+
+select * from cidade
+
+delete from item where cd_item = 1
+
+select * from item
+
+select vl_venda, vl_custo, cd_item, ds_item from item
+where vl_custo is not null
+
+select vl_venda, vl_custo, cd_item, ds_item from item
+where (cd_item > 6) and (cd_item <= 9) or (vl_custo is not null)
+
+select vl_venda, vl_custo, cd_item, ds_item from item
+where ds_item like '%Piso%'
+
+select vl_venda, vl_custo, cd_item, ds_item from item
+where ds_item like 'Piso%'
+
+select vl_venda, vl_custo, cd_item, ds_item from item
+where ds_item like '%Piso'
+
+select vl_venda, vl_custo, cd_item, ds_item from item
+where lower ds_item like '%piso%'
+
+select vl_venda, vl_custo, cd_item, ds_item from item
+where upper ds_item like '%PISO%'
+
+select vl_venda as valor_venda, vl_custo, cd_item, ds_item from item
+where ds_item like '%Piso%'
+
+select cd_item, ds_item, vl_customedio, qt_disponivel, vl_customedio * qt_disponivel as vl_total
+from item
+
+/*exercicio 1*/
+select from pedido where (cd_pedido between 100 and 150) and tp_pedido = 'C'
+
+/*exercicio 2*/
+select * from item where lower (sg_unidade) like 'm%'
+/*ou*/
+select * from item where sg_unidade like 'm%' or sg_unidade like 'M%'
+
+/*exercicio 3, não é possível pois está relacionado com a tabela estoque*/
+delete from item where cd_item > 5320
+
+/*exercicio 4*/
+update pessoa set tp_pessoa = 1 where cd_pessoa < 10
+
+/*exercicio 5, não retorna registros pois a condição (intervalo) não é verdadeira*/
+select * from item where cd_item <= 23 and cd_item > 58
+/*o correto seria*/
+select * from item where cd_item >= 23 and cd_item < 58
+
+/*exercicio 6*/
+delete from item where cd_item = 2350
+
+/*exercicio 8*/
+select cd_item, qt_mov from estoque where vl_unitario >= 10 and vl_unitario <=25
+select cd_item, qt_mov from estoque where vl_unitario between 10 and 25
+
+/*exercicio 9*/
+select cd_item, qt_mov, vl_unitario, qt_mov * vl_unitario as vl_total from estoque
+
+
+06042022
+
+/*calcular a data, não é exercicio*/
+select age(current_date, '22/06/1991')
+
+
+EXERCICIOS ATIVIDADES 1
+
+/*exercício 01*/
+select * from professor; /*para verificar o maior codigo de professor existente*/
+insert into professor (cd_professor,nm_professor)
+values(7,'Rogério Pereira')
+
+/*exercicio 02*/
+select * from disciplina /*para verificar o maior código de disciplina existente*/
+
+insert into disciplina (cd_disc, nm_disc, nr_carga)
+values(7,'Cálculo Diferencial e Integral', 8)
+
+/*exercicio 03*/
+select cd_professor from horario where nr_dia = 1
+
+/*exercicio 04*/
+select cd_professor from horario where nr_dia in (1)
+
+/*exercicio 05*/
+insert into horario (nr_dia, nr_aula, cd_disc, cd_professor, cd_curso)
+values(1, 1, 7, 7, 1),(1, 2, 7, 7, 1)
+
+/*esercicio 06*/
+select ra, cd_disc from avaliacao where nr_nota < 3.8
+
+/*exercicio 07*/
+delete from academico where nm_academico like '%Aluísio%'
+/*não foi possível excluir pois este registro tem relação com a tabela avaliacao*/
+
+/*exercicio 08*/
+select * from curso /*verificar o código dos cursos*/
+select * from academico /*verificar a tabela academico*/
+update academico set cd_curso = 1 where (cd_curso = 4)
+/*a ação não alterou nenhum registro pois não haviam academicos para o curso de Sistemas para Internet*/
+
+
+AVALIAÇÃO 13042022
+
+EXERC 11
+create table hospede(
+	cd_hospede integer not null,
+	nm_hospede varchar(80) not null,
+	dt_registro date not null,
+	dt_aniversario date,
+	constraint pk_hospede primary key (cd_hospede)
+);
+
+create table categoria(
+	cd_categoria integer not null,
+	nm_categoria varchar (60) not null,
+	vl_diaria float not null,
+	constraint pk_categoria primary key (cd_categoria)
+);
+
+create table diaria(
+	data date not null,
+	nr_apto integer not null,
+	cd_categoria integer not null,
+	cd_hospede integer not null,
+	st_diaria char(1) not null,
+	vl_diaria double precision not null,
+	constraint pk_diaria primary key (data, nr_apto)
+);
+
+create table reserva(
+	dt_reserva date not null,
+	nr_reserva integer not null,
+	cd_categoria integer not null,
+	nr_apto integer not null,
+	cd_hospede integer not null,
+	dt_entrada date not null,
+	dt_saida date not null,
+	st_reserva char(1) not null,
+	constraint pk_reserva primary key (dt_reserva, nr_reserva)
+);
+
+alter table diaria add constraint fk_categoria_diaria foreign key (cd_categoria) references categoria;
+
+alter table diaria add constraint fk_hospede_diaria foreign key (cd_hospede) references hospede;
+
+alter table reserva add constraint fk_categoria_reserva foreign key (cd_categoria) references categoria;
+
+alter table reserva add constraint fk_hospede_reserva foreign key (cd_hospede) references hospede;
+
+
+EXERC 12
+insert into hospede (cd_hospede, nm_hospede, dt_registro, dt_aniversario)
+values 	(18,'Marcelino Pereira', '01/05/2014', null),
+	(8,'Jucelia Cardoso', '03/06/2015', '03/08/1982'),
+	(99,'Mauricio Andrade', '08/09/2014', '05/01/1979'),
+	(35,'Andréia Costa e Silva', '01/02/2015', null),
+	(22,'Arnaldo Antunes', '08/03/2012', null),
+	(54,'Floriano Márcio Pires', '19/07/2015', '12/03/1977')
+
+
+EXERC 13
+insert into categoria (cd_categoria, nm_categoria, vl_diaria)
+values 	(1, 'Simples', 160.00),
+	(2, 'Duplo', 300.00),
+	(3, 'Duplo Luxo', 380.00),
+	(4, 'Suíte', 550.00)
+
+
+EXERC 14
+insert into reserva(dt_reserva, nr_reserva, cd_categoria, nr_apto, cd_hospede, dt_entrada, dt_saida, st_reserva)
+values	('03/08/2014', 1, 1, 102, 8, '09/08/2014', '12/08/2014', 'F'),
+		('03/08/2014', 2, 2, 206, 35, '10/08/2014', '15/08/2014', 'F'),
+		('04/06/2015', 1, 4, 999, 22, '15/06/2015', '22/06/2015', 'A')
+		
+
+EXERC 15
+delete from categoria where vl_diaria < 300
+/*não foi possivel a exclusão pois está referenciado na tabela reserva*/
+
+
+EXERC 16
+update reserva set cd_categoria = 9 where (cd_categoria = 4)
+
+20042022
+
+junção com where
+select * from cliente, locacao
+where cliente.cd_cliente = locacao.cd_cliente
+
+select locacao.dt_locacao, cliente.nome
+from cliente, locacao
+where cliente.cd_cliente = locacao.cd_cliente
+
+
+junção obrigatória apenas com join
+select * from cliente join locacao
+on cliente.cd_cliente = locacao.cd_cliente
+
+select locacao.dt_locacao, cliente.nome
+from cliente
+join locacao
+on cliente.cd_cliente = locacao.cd_cliente
+
+junção não obrigatória com left join
+select locacao.dt_locacao, cliente.nome, 
+from cliente
+left join locacao
+on cliente.cd_cliente = locacao.cd_cliente
+/*tabela principal é a do from (a esquerda do left)*/
+
+select locacao.dt_locacao, cliente.nome, cliente.cd_cliente, locacao.cd_cliente
+from cliente
+left join locacao
+on cliente.cd_cliente = locacao.cd_cliente
+/*alguns cd_cliente não tem valor na tabela locacao*/
+
+exemplo de junção com 04 tabelas
+select locacao.cd_cliente, locacao.dt_locacao, cliente.cd_cliente, cliente.nome, filme_locacao.cd_filme, filme.nm_filme
+from cliente
+left join locacao
+on (cliente.cd_cliente = locacao.cd_cliente)
+left join filme_locacao
+on (locacao.nr_locacao = filme_locacao.nr_locacao)
+left join filme
+on (filme.cd_filme = filme_locacao.cd_filme)
+
+exemplo de junção com 05 tabelas
+select locacao.cd_cliente, locacao.dt_locacao, cliente.cd_cliente, cliente.nome,
+	filme_locacao.cd_filme, filme.nm_filme, genero.ds_genero
+from cliente
+left join locacao
+on (cliente.cd_cliente = locacao.cd_cliente)
+left join filme_locacao
+on (locacao.nr_locacao = filme_locacao.nr_locacao)
+left join filme
+on (filme.cd_filme = filme_locacao.cd_filme)
+left join genero
+on (genero.cd_genero = filme.cd_genero)
+
+EXERCICIOS DO FIM DO SLIDE
+/*exerc 01*/
+select tipo.ds_tipo, tipo.vl_tipo, filme.nm_filme, filme.nr_midias
+from tipo
+join filme
+on (tipo.cd_tipo = filme.cd_tipo)
+
+/*exerc 02*/
+select genero.ds_genero, filme.nm_filme
+from genero
+left join filme
+on (genero.cd_genero = filme.cd_genero)
+
+/*exerc 03*/
+select filme.nm_filme, tipo.ds_tipo, genero.ds_genero
+from filme
+left join tipo on (tipo.cd_tipo = filme.cd_tipo)
+left join genero on (filme.cd_genero = genero.cd_genero)
+
+/*exerc 04*/
+select cliente.nome, locacao.dt_locacao, filme.nm_filme, filme_locacao.dt_paradev, filme_locacao.dt_devolvido
+from cliente
+left join locacao on (locacao.cd_cliente = cliente.cd_cliente)
+left join filme_locacao on (filme_locacao.nr_locacao = locacao.nr_locacao)
+left join filme on (filme.cd_filme = filme_locacao.cd_filme)
+
+27042022
+
