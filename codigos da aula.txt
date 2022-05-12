@@ -1,0 +1,70 @@
+11052022
+
+select pedido.dt_emissao, pessoa.nm_pessoa, count (*)
+from pedido
+join pessoa
+using(cd_pessoa)
+where (dt_emissao >= '07/11/2001')
+and (dt_emissao <= '20/11/2001')
+group by pedido.dt_emissao, pessoa.nm_pessoa
+order by count (*) desc
+
+select pedido.dt_emissao, pessoa.nm_pessoa, count (*)
+from pedido
+join pessoa
+using(cd_pessoa)
+where (dt_emissao >= '07/11/2001')
+and (dt_emissao <= '20/11/2001')
+group by pedido.dt_emissao, pessoa.nm_pessoa
+order by 3 desc
+
+select pedido.dt_emissao, pessoa.nm_pessoa, count (*) contagem
+from pedido
+join pessoa
+using(cd_pessoa)
+where (dt_emissao >= '07/11/2001')
+and (dt_emissao <= '20/11/2001')
+group by pedido.dt_emissao, pessoa.nm_pessoa
+order by contagem desc
+
+exerc 01
+select item.sg_unidade, count (*) contagem
+from item
+group by item.sg_unidade
+order by contagem desc
+
+select item.sg_unidade, unidade.ds_unidade, count (*) contagem
+from item
+left join unidade
+using(sg_unidade)
+group by item.sg_unidade, unidade.ds_unidade
+order by contagem desc
+
+exerc 02
+select pedidoitem.cd_item, avg (pedidoitem.vl_unitario)
+from pedidoitem
+group by pedidoitem.cd_item
+
+exerc 03
+select item.cd_item, item.ds_item, avg (pedidoitem.vl_unitario)
+from pedidoitem
+left join item
+using (cd_item)
+group by item.ds_item, item.cd_item
+
+exerc 04
+select pessoa.nm_pessoa, count(*) contagem
+from pedido
+left join pessoa
+using (cd_pessoa)
+	group by pessoa.nm_pessoa
+	order by contagem desc
+
+select
+	max(vl_unitario) as maior_valor,
+	min(vl_unitario) as menor_valor,
+	avg(vl_unitario) as media_vl_unitario,
+	sum(vl_unitario) as soma_valor,
+	count(*) as contagem
+from pedidoitem
+
