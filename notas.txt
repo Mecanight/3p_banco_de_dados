@@ -1,0 +1,14 @@
+bibliografia
+projeto de banco de dados - Abreu
+modelagem e administracao de dados - Barbieri
+projeto de banco de dados, uma nova visao pratica - ...
+
+dado - fato do mundo real
+informacao - é o dado transformado em algo util
+dado(entrada) >> processamento (analise dos dados) >> saida (informacao)
+
+20042022
+Join - juntar as tabelas
+tipos de Joins - existem vários, mas vamos ver somente 02 deles
+sempre especificar tabela.campo em um join, para definir de qual tabela apresentar os registros
+
