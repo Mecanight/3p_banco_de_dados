@@ -68,3 +68,34 @@ select
 	count(*) as contagem
 from pedidoitem
 
+18052022
+select pessoa.nm_pessoa, count(*) as contagem
+from pessoa
+left join pedido
+using(cd_pessoa)
+group by pessoa.nm_pessoa
+having count(*) > 50
+order by count(*) desc
+
+select pessoa.nm_pessoa, count(*) as contagem
+from pessoa
+left join pedido
+using(cd_pessoa)
+where (pedido.dt_emissao between '01/01/2001' and '15/09/2007')
+group by pessoa.nm_pessoa
+having count(*) > 50
+order by count(*) desc
+
+exerc 1
+select curso.nm_curso, count(*) as contagem
+from curso
+left join academico
+using(cd_curso)
+group by curso.nm_curso
+
+exerc 3
+select academico.nm_academico, disciplina.nm_disc, avg (avaliacao.nr_nota) as media
+from academico
+join avaliacao using (ra)
+join disciplina using (cd_disc)
+group by academico.nm_academico, disciplina.nm_disc
