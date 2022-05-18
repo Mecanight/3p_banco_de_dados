@@ -1,0 +1,46 @@
+Create table CIDADE(
+  CD_CIDADE Integer NOT NULL,
+  NM_CIDADE Varchar(60) NOT NULL,
+  UF Varchar(2) NOT NULL,
+ primary key (CD_CIDADE));
+
+Create table CONSULTA(
+  DATA Date NOT NULL,
+  SEQUENCIA Integer NOT NULL,
+  CRM Varchar(15) NOT NULL,
+  CD_PACIENTE Integer NOT NULL,
+  PRESCRICAO Varchar(200),
+ primary key (DATA,SEQUENCIA));
+
+Create table ESPECIALIDADE(
+  CD_ESPECIALIDADE Integer NOT NULL,
+  DS_ESPECIALIDADE Varchar(20) NOT NULL,
+ primary key (CD_ESPECIALIDADE));
+
+Create table ESPEC_MEDICO (
+  CRM Varchar(15) NOT NULL,
+  CD_ESPECIALIDADE Integer NOT NULL,
+ primary key (CRM,CD_ESPECIALIDADE));
+
+Create table MEDICO (
+  CRM Varchar(15) NOT NULL,
+  NM_MEDICO Varchar(40) NOT NULL,
+  CD_CIDADE Integer,
+  DS_ENDERECO Varchar(60),
+  NR_CEP Varchar(10),
+ primary key (CRM));
+
+Create table PACIENTE (
+  CD_PACIENTE Integer NOT NULL,
+  NM_PACIENTE Varchar(60) NOT NULL,
+  CD_CIDADE Integer,
+  DS_ENDERECO Varchar(60),
+  NR_CEP Varchar(10),
+ primary key (CD_PACIENTE));
+
+Alter table PACIENTE add  foreign key (CD_CIDADE) references CIDADE (CD_CIDADE);
+Alter table MEDICO add  foreign key (CD_CIDADE) references CIDADE (CD_CIDADE);
+Alter table ESPEC_MEDICO add  foreign key (CD_ESPECIALIDADE) references ESPECIALIDADE (CD_ESPECIALIDADE);
+Alter table CONSULTA add  foreign key (CRM) references MEDICO (CRM);
+Alter table ESPEC_MEDICO add  foreign key (CRM) references MEDICO (CRM);
+Alter table CONSULTA add  foreign key (CD_PACIENTE) references PACIENTE (CD_PACIENTE);
