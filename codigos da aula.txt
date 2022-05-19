@@ -93,9 +93,34 @@ left join academico
 using(cd_curso)
 group by curso.nm_curso
 
+exerc 2
+
+
 exerc 3
 select academico.nm_academico, disciplina.nm_disc, avg (avaliacao.nr_nota) as media
 from academico
 join avaliacao using (ra)
 join disciplina using (cd_disc)
 group by academico.nm_academico, disciplina.nm_disc
+
+exerc 4
+select academico.nm_academico, disciplina.nm_disc, avg (avaliacao.nr_nota) as media
+from academico
+join avaliacao using (ra)
+join disciplina using (cd_disc)
+group by academico.nm_academico, disciplina.nm_disc
+having avg (avaliacao.nr_nota) >= 7
+
+exerc 5
+select professor.nm_professor, count(horario.nr_dia) as dias_aula
+from professor
+join horario
+using(cd_professor)
+group by (professor.nm_professor)
+
+exerc 6
+select disciplina.nm_disc, count(horario.nr_aula) as contagem
+from disciplina
+join horario
+using(cd_disc)
+group by (disciplina.nm_disc)
