@@ -124,3 +124,29 @@ from disciplina
 join horario
 using(cd_disc)
 group by (disciplina.nm_disc)
+
+
+EXERCICIO PARA ENTREGAR
+
+exerc 01
+
+select pessoa.nome, count(compra.nrcompra) as compras , count(venda.nrvenda) as vendas
+from pessoa
+join compra
+using(codpessoa)
+join venda
+using(codpessoa)
+group by pessoa.nome
+
+
+exerc 02
+
+select pessoa.nome, count(compra.nrcompra) as compras , count(venda.nrvenda) as vendas
+from pessoa
+join compra
+using(codpessoa)
+join venda
+using(codpessoa)
+group by pessoa.nome
+having count (compra.nrcompra) > 10
+
