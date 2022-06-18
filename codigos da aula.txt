@@ -150,3 +150,132 @@ using(codpessoa)
 group by pessoa.nome
 having count (compra.nrcompra) > 10
 
+08062022
+select descricao||item
+from item
+
+select descricao||' - '||item
+from item
+
+select descricao||' - '||item||'('||unidade||'))' as texto_concatenado
+from item
+
+select descricao||' - '||item||'('||unidade||'))' as texto_concatenado,
+length(descricao) as tamanho_string
+from item
+
+select descricao||' - '||item||'('||unidade||'))' as texto_concatenado,
+length(descricao) as tamanho_string,
+lower(descricao) as string_minusculo,
+upper(descricao) as string_maiusculo
+from item
+
+select descricao||' - '||item||'('||unidade||'))' as texto_concatenado,
+length(descricao) as tamanho_string,
+lower(descricao) as string_minusculo,
+upper(descricao) as string_maiusculo
+from item
+where (upper (descricao) like upper('item%'))
+
+select descricao||' - '||item||'('||unidade||'))' as texto_concatenado,
+    length(descricao) as tamanho_string,
+    lower(descricao) as string_minusculo,
+    upper(descricao) as string_maiusculo,
+    strpos('Brasil', 'sil') as posicao_texto,
+    strpos(descricao, '0') as posicao_texto_Item,
+    substring(descricao, 1, 5) as parte_texto
+    from item
+where (upper (descricao) like upper('item%'))
+
+select current_date, current_time,
+    extract (day from current_date) as dia,
+    extract (month from current_date) as mes,
+    extract (year from current_date) as ano
+from pessoa
+where (extract(day from aniversari) = extract(day from current_date))
+    and (extract(month from aniversari) = extract (month from current_date))
+    
+select current_date, current_time,
+    extract (day from current_date) as dia,
+    extract (month from current_date) as mes,
+    extract (year from current_date) as ano,
+    age (current_date, '22/06/1991') as idade
+
+update pessoa set tipo = 'F' where codpessoa = 2
+update pessoa set tipo = 'A' where codpessoa = 3
+update pessoa set tipo = 'X' where codpessoa = 4
+
+select codpessoa, tipo,
+case
+when tipo = 'C' then 'Cliente'
+when tipo = 'F' then 'Fornecedor'
+when tipo = 'A' then 'Cliente/Fornecedor'
+end as tipo_pessoa
+from pessoa
+order by codpessoa
+
+select codpessoa, tipo,
+case
+when tipo = 'C' then 'Cliente'
+when tipo = 'F' then 'Fornecedor'
+when tipo = 'A' then 'Cliente/Fornecedor'
+else 'Tipo de pessoa inválido'
+end as tipo_pessoa
+from pessoa
+order by codpessoa
+
+exerc 01
+select pessoa.codpessoa, pessoa.nome,
+    (select count (*) from compra where compra.codpessoa = pessoa.codpessoa) as compras,
+    (select count (*) from venda where venda.codpessoa = pessoa.codpessoa) as vendas
+from pessoa
+
+exerc 02
+select item.item, item.descricao,
+(select sum (quantidade) from compraitem where compraitem.item = item.item) as qt_comprada,
+(select sum(quantidade) from vendaitem where vendaitem.item = item.item) as qt_vendida
+from item
+
+select item.item, item.descricao,
+coalesce(
+(select sum (quantidade) from compraitem where compraitem.item = item.item), 0) as qt_comprada,
+(select sum(quantidade) from vendaitem where vendaitem.item = item.item) as qt_vendida
+from item
+
+exerc 03
+select item.item, item.descricao,
+coalesce(
+(select sum (quantidade) from compraitem where compraitem.item = item.item), 0) -
+coalesce(
+(select sum(quantidade) from vendaitem where vendaitem.item = item.item), 0) as qt_disponivel
+from item
+
+exerc 04
+select item.item, item.descricao,
+coalesce(
+(select sum (quantidade) from compraitem where compraitem.item = item.item), 0) -
+coalesce(
+(select sum(quantidade) from vendaitem where vendaitem.item = item.item), 0) as qt_disponivel
+from item
+where (coalesce(
+(select sum (quantidade) from compraitem where compraitem.item = item.item), 0) -
+coalesce(
+(select sum(quantidade) from vendaitem where vendaitem.item = item.item), 0) > 0)
+
+exerc 05
+select * from item where item in ('000012', '000005', '000007')
+
+select * from item where item in (select item from compraitem)
+
+select * from item where item in (select item from compraitem)
+and item in (select item from vendaitem)
+
+select * from item where item not in (select item from compraitem)
+and item not in (select item from vendaitem)
+
+update item set descricao = 'Não utilizado'
+where item not in (select item from compraitem)
+and item not in (select item from vendaitem)
+
+exerc 06
+o exerc 05 é com maçã e o exerc 06 é com laranja
