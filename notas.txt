@@ -15,3 +15,14 @@ sempre especificar tabela.campo em um join, para definir de qual tabela apresent
 18052022
 agrupamento - count, sum, avg, min e max
 filtro de dados agrupados é feito com o comando HAVING
+
+08062022
+subselect - é um select dentro de outro select
+sempre abrir e fechar parenteses quando usar o subselect
+funções escalares - as passadas em aula só funcionam no postgres
+
+prova
+join
+agrupamento
+subselect
+funções escalares
